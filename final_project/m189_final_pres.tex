@@ -1,0 +1,449 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+%\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{multimedia}
+\usepackage{media9}
+\usepackage{caption}
+\usepackage{subcaption}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\inv}{^{-1}}
+\newcommand{\e}{\epsilon}
+\newcommand{\J}{\mathcal{J}}
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[MATH 189AC Final]{Graph Neural Network Approaches to EHR Data} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{David Pitt} % Your name
+\institute[HMC Math 189AC] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+HMC Math 189AC \\ % Your institution for the title page
+\medskip
+\textit{dpitt@g.hmc.edu} % Your email address
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+\begin{frame}
+\frametitle{Overview} % Table of contents slide, comment this block out to remove it
+\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+%------------------------------------------------
+\section{Motivation} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
+
+%------------------------------------------------
+
+%------------------------------------------------
+
+\begin{frame}
+    \frametitle{Motivation}
+   	Survey information-theoretic approaches to structuring and learning from the same EHR dataset
+    
+    \begin{itemize}
+        \item Learning from a graph structure
+        \item Learning the structure itself
+        \item Generating a better structure
+        \item More complex organization/representation
+    \end{itemize}
+    
+
+    \end{frame}
+%------------------------------------------------
+
+\begin{frame}
+    \frametitle{General terminology}
+    
+    \begin{itemize}
+        \item Consider a graph $\mathcal{G} = \{\mathcal{V},\mathcal{E}\}$
+        \item Nodes $\mathcal{V}$ represented by feature matrix $X$, class vector $Y$
+        \item Adjacency matrix $A$
+        \item Embeddings of feature vectors in latent space = $H$
+        \item Standard nonlinear activation function $\sigma$
+        \item Trainable parameters $W$ (and sometimes $b$)
+    \end{itemize}
+    
+
+    \end{frame}
+ 
+ 
+\section{Models}
+    %------------------------------------------------
+    
+\subsection{MPNNs}
+
+
+
+\begin{frame}
+    \frametitle{HORDE}
+	Construct a multi-modal EHR graph
+	
+    \begin{itemize}
+        \item Graph contains multiple classes of node: patient, event, and concept
+        \item Patients are connected to concepts and events that relate to their hospital visits
+        \item Graph varies in time (discrete visit sequence)
+        \item Edges $\mathcal{E} = \{\mathcal{E}_t\}_{t=0}^n$
+        \item Time-invariant embeddings computed through MPNN process:
+        
+        \begin{center}
+$h_i^l = \sigma(\sum\limits_{v_j \in \mathcal{V}_{inv}} \frac{h_j^{l-1}W^l_{inv}}{|N(v_i)|\cdot |N(v_j)|})$
+\end{center}
+        \item Time-variant node embeddings updated using MPNN, then passed through LSTM
+    \end{itemize}
+    
+
+    \end{frame}
+    
+%------------------------------------------------
+
+
+\begin{frame}
+    \frametitle{LSTM-GNN}
+	The majority of diseases and procedures occur relatively infrequently
+	
+    \begin{itemize}
+        \item Connect similar cases in a graph of patients
+        \item $A$ becomes $\mathcal{M}$, a relatedness matrix
+         
+        \begin{center}
+        $\mathcal{M}_{ij} = a \sum\limits_{\mu = 1}^m (\mathcal{D}_{i\mu}\mathcal{D}_{j\mu}(d_\mu^{-1} + c)) - \sum\limits_{\mu = 1}^m(\mathcal{D}_{i\mu} + \mathcal{D}_{j\mu})$
+         \end{center}
+         \item $\mathcal{D}$ is a row matrix of diagnoses
+         \item MPNN neighborhood is chosen using $k$ most related neighbors
+         \item Hyperparameters $a,c,k$
+    \end{itemize}
+    
+
+    \end{frame}
+    
+%------------------------------------------------\
+
+
+\begin{frame}
+    \frametitle{LSTM-GNN}
+	
+	
+    \begin{itemize}
+        \item $X$ is divided into $X_{var}$ and $X_{inv}$, time-variant and time-invariant
+        \item Time-variant features are fed into LSTM, invariant to a GCN
+        \item Embeddings concatenated and classified by a FCN
+    \end{itemize}
+    
+
+    \end{frame}
+    
+%------------------------------------------------
+
+\subsection{Attention models}
+
+\begin{frame}
+    \frametitle{Attention models}
+	Adjacency matrix not known a priori
+    \begin{itemize}
+        \item Learn edges using the transformer architecture
+        \item There are several self-attention mechanisms 
+    \end{itemize}
+    
+
+    \end{frame}
+    
+%------------------------------------------------
+
+
+\begin{frame}
+    \frametitle{GCT}
+	First application of the transformer to a graph
+    \begin{itemize}
+        \item $A$ is naively initialized with conditional probabilities of co-occurrence
+        \item Some connections are forbidden: operations at each step are multiplied by mask $M$
+        \begin{center}
+        $\hat{A} ^{(j)}= $ softmax $ (\frac{C^{(j-1)}W^{(j)}_Q(C^{(j-1)}W^{(j)}_K)^T}{\sqrt{d}} \cdot M)$
+        \end{center}
+        \item $C$ represents output of last encoding
+    \end{itemize} 
+    
+
+    \end{frame}
+    
+%------------------------------------------------
+
+
+\begin{frame}
+    \frametitle{VGNN}
+	Key advance: variational
+   \begin{itemize}
+        \item Features passed through embedding: $X \rightarrow H$
+        \item Model learns distribution $p(z_i \mid h_i)$
+        \item Sample from $q(\hat{h_i} \mid z_i)$
+        \item K-head attention predicts $\widehat{A}$
+        \item Attention coefficients $e_{ij} = $ $\sigma(a^T[Wh_i \ || \ Wh_j])/\sqrt{dim(h_i)}$
+	    \item $A_{ij}$ = $\frac{exp(e_{ij})}{\sum\limits_{p \in N(i)} exp(e_{ip})}$
+
+        \item $H^{(l+1)} = $ FFN [$A^{(l)}(H^{(l)}W^{(l)} + b^{(l)})$]
+    \end{itemize}
+    
+    
+
+    \end{frame}
+%------------------------------------------------
+
+\begin{frame}
+    \frametitle{GRAM}
+	Key advance: new hierarchical structure
+    \begin{itemize}
+        \item Concept nodes are placed in a DAG, where depth encodes specificity
+        \item MPNN creates embeddings for concepts
+        \item Visits are represented by a row matrix of concept vectors
+        \item Sequence of visit embeddings passed through RNN, final output is a softmax disease prediction
+    \end{itemize}
+    
+
+    \end{frame}
+    
+%------------------------------------------------
+
+\subsection{Learning a better graph}
+
+
+\begin{frame}
+    \frametitle{GraphSMOTE}
+	Key advance: node interpolation
+    \begin{itemize}
+		\item GraphSAGE layer creates embeddings
+        \item Add more nodes of a highly underrepresented class
+		\begin{center}
+		$h_{v'}^1 = (1-\delta) \cdot h^1_v + \delta \cdot h^1_{nn}$,
+		\end{center}
+		\item Predict edges for new nodes:
+		
+\begin{center}
+$E(u,v) =$ softmax$(\sigma(h^1_v \cdot S \cdot h^1_u))$,
+\end{center}
+        
+        \item Final embeddings are passed through one MPNN and one linear layer
+    \end{itemize}
+    
+
+    \end{frame}
+    
+%------------------------------------------------
+
+
+\begin{frame}
+    \frametitle{RioGNN}
+	Key advance: iterative node deletion 
+    \begin{itemize}
+        \item Penalize dissimilar embeddings within a class using similarity
+        
+        
+\begin{center}
+$\mathcal{S}(u,v) = 1 - \mathcal{D}(u,v)$,
+\end{center}
+        \item We define a Markov Decision Process with an action space of node and edge deletions
+        \item Reward function is the average similarity of a neighborhood
+        \item After pruning, the model uses one MPNN layer to update embeddings
+        \item Repeated over several layers
+        \item Similarity is fed into loss
+    \end{itemize}
+    
+
+    \end{frame}
+    
+%------------------------------------------------
+
+\subsection{Miscellaneous}
+
+
+\begin{frame}
+    \frametitle{Walk-GNN}
+	Key advance: a new kind of recommender system	
+    \begin{itemize}
+        \item Construct a knowledge graph of patient and concept nodes
+        \item Agent walks along graph 
+        \item Define an MDP, state space $s_t = \{p_e,e_t,h_t\}$
+        \item Action space $a_t = (r_{t+1},e_{t+1})$ (walking to a new node).
+        \item Reward function prioritizes walking to disease nodes that match diagnosis
+        \item Agent learns optimal walk policy $\pi_t$
+        
+    \end{itemize}
+    
+
+    \end{frame}
+    
+%------------------------------------------------
+
+
+\section{Data}
+
+
+\begin{frame}
+    \frametitle{EHR Datasets}
+	Two main datasets used in medical ML
+
+    \begin{itemize}
+        \item MIMIC-III contains information over three years at Beth Israel Hospital
+        \item eICU contains information from same time period from 300+ ICUs across the US
+        \item Deidentified, tagged patient records, including encounters, admission data, prescriptions, lab results and formal diagnoses
+        \item Newer versions of the dataset include doctors' notes in natural language
+    \end{itemize}
+    
+
+    \end{frame}
+%------------------------------------------------
+
+\section{Results}
+
+\begin{frame}
+    \frametitle{Results}
+	
+	\begin{figure}
+	%\caption{Prediction task accuracy comparison}
+        \includegraphics[height=0.4\linewidth]{/home/dave/Desktop/College/Math189AC/tex/images/table.png}
+        %\caption{$\lambda = 0.33$}
+    \end{figure}
+    \emph{*Provided their own MIMIC matrix, not standard}
+    
+
+    \end{frame}
+%------------------------------------------------
+
+
+\begin{frame}
+    \frametitle{Takeaways}
+    
+    \begin{itemize}
+    	\item Graph RL has huge potential in health record analysis
+    	\item New approaches continue to arise
+        \item ML outperforms humans at constructing knowledge graphs
+        \item No need to constrain to traditional MPNNs
+    \end{itemize}
+    
+
+    \end{frame}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{References}
+
+\scriptsize{
+[1] Harmonized representation learning on dynamic EHR graphs
+https://www.sciencedirect.com/science/article/pii/S153204642030054X?via%3Dihub
+
+[2] Predicting patient outcomes with representation learning
+https://paperswithcode.com/paper/predicting-patient-outcomes-with-graph
+
+[3]  Learning the Graphical Structure of Electronic Health Records with Graph Convolutional Transformer 
+https://paperswithcode.com/paper/graph-convolutional-transformer-learning-the
+
+[4] Variationally Regularized Graph-based representation learning for electronic health records
+https://paperswithcode.com/paper/graph-neural-network-on-electronic-health
+
+[5] GRAM: Graph-based attention model for healthcare representation learning
+https://paperswithcode.com/paper/gram-graph-based-attention-model-for
+
+[6] GraphSMOTE: Imbalanced Node Classification on Graphs with Graph Neural Networks
+https://github.com/TianxiangZhao/GraphSmote
+
+[7] Reinforced Neighborhood Selection Guided Multi-Relational Graph Neural Networks 
+https://arxiv.org/pdf/2104.07886.pdf
+
+[8] Sun, Zhoujian et al. "Interpretable Disease Prediction based on Reinforcement Path Reasoning over Knowledge Graphs." Oct 2020. https://arxiv.org/pdf/2010.08300.pdf}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\Huge{\centerline{The End}}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\end{document} 
